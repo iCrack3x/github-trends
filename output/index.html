@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover trending GitHub repositories across all programming languages. Updated daily with the most starred projects.">
+    <title>Trending Repositories | GitHub Trends</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --success: #3fb950;
+            --warning: #d29922;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #a371f7);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .logo-text span {
+            color: var(--accent);
+        }
+        
+        nav {
+            display: flex;
+            gap: 24px;
+        }
+        
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        nav a:hover {
+            color: var(--text-primary);
+        }
+        
+        main {
+            padding: 40px 0;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(180deg, rgba(88, 166, 255, 0.1) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 32px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .repo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .repo-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .repo-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px rgba(88, 166, 255, 0.15);
+        }
+        
+        .repo-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .repo-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent);
+            word-break: break-word;
+        }
+        
+        .repo-stars {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+        
+        .repo-stars svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--warning);
+        }
+        
+        .repo-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .repo-footer {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .repo-lang {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .lang-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .repo-forks, .repo-issues {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        
+        .category-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .category-card:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent);
+        }
+        
+        .category-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .category-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .category-count {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+        
+        .topic {
+            background: var(--bg-tertiary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--accent);
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .breadcrumb-sep {
+            color: var(--text-secondary);
+        }
+        
+        .breadcrumb-current {
+            color: var(--text-secondary);
+        }
+        
+        .repo-detail {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+        }
+        
+        .repo-detail-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .repo-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+        }
+        
+        .repo-detail-info {
+            flex: 1;
+        }
+        
+        .repo-detail-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .repo-detail-desc {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+        
+        .repo-detail-stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 20px;
+        }
+        
+        .detail-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+        
+        .detail-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .detail-stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--success);
+            color: var(--bg-primary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+        
+        .cta-button:hover {
+            opacity: 0.9;
+        }
+        
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+            margin-top: 60px;
+            text-align: center;
+        }
+        
+        footer p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .alternatives {
+            margin-top: 40px;
+        }
+        
+        .alternatives h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .repo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .repo-detail-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .repo-detail-stats {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav {
+                display: none;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">GT</div>
+                    <div class="logo-text">GitHub<span>Trends</span></div>
+                </a>
+                <nav>
+                    <a href="index.html">Trending</a>
+                    <a href="categories/index.html">Languages</a>
+                    <a href="#categories">Categories</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+
+    <section class="hero">
+        <h1>GitHub Trends</h1>
+        <p>Discover the most exciting open source projects trending on GitHub right now</p>
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-value">50</div>
+                <div class="stat-label">Repositories</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">266.5k</div>
+                <div class="stat-label">Total Stars</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">38.6k</div>
+                <div class="stat-label">Total Forks</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">8</div>
+                <div class="stat-label">Languages</div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="categories">
+        <h2 class="section-title">
+            <span>📊</span> Browse by Language
+        </h2>
+        <div class="category-grid">
+
+            <a href="categories/typescript.html" class="category-card">
+                <div class="category-icon">📘</div>
+                <div class="category-name">TypeScript</div>
+                <div class="category-count">20 repos</div>
+            </a>
+
+            <a href="categories/python.html" class="category-card">
+                <div class="category-icon">🐍</div>
+                <div class="category-name">Python</div>
+                <div class="category-count">14 repos</div>
+            </a>
+
+            <a href="categories/javascript.html" class="category-card">
+                <div class="category-icon">🟨</div>
+                <div class="category-name">JavaScript</div>
+                <div class="category-count">5 repos</div>
+            </a>
+
+            <a href="categories/unknown.html" class="category-card">
+                <div class="category-icon">📦</div>
+                <div class="category-name">Unknown</div>
+                <div class="category-count">5 repos</div>
+            </a>
+
+            <a href="categories/rust.html" class="category-card">
+                <div class="category-icon">🦀</div>
+                <div class="category-name">Rust</div>
+                <div class="category-count">2 repos</div>
+            </a>
+
+            <a href="categories/c.html" class="category-card">
+                <div class="category-icon">🔧</div>
+                <div class="category-name">C</div>
+                <div class="category-count">2 repos</div>
+            </a>
+
+            <a href="categories/vue.html" class="category-card">
+                <div class="category-icon">🟩</div>
+                <div class="category-name">Vue</div>
+                <div class="category-count">1 repos</div>
+            </a>
+
+            <a href="categories/shell.html" class="category-card">
+                <div class="category-icon">📦</div>
+                <div class="category-name">Shell</div>
+                <div class="category-count">1 repos</div>
+            </a>
+
+        </div>
+    </section>
+    
+    <section id="trending">
+        <h2 class="section-title">
+            <span>🔥</span> Trending Now
+        </h2>
+        <div class="repo-grid">
+
+            <a href="repos/affaan-m-everything-claude-code.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">affaan-m/everything-claude-code</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        35.3k
+                    </span>
+                </div>
+                <p class="repo-desc">Complete Claude Code configuration collection - agents, skills, hooks, commands, rules, MCPs. Battle-tested configs from an Anthropic hackathon winner.</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #f1e05a;"></span>
+                        JavaScript
+                    </span>
+                    <span class="repo-forks">⑂ 4.3k</span>
+                    <span class="repo-issues">⊙ 3</span>
+                </div>
+                <div class="topics"><span class="topic">ai-agents</span><span class="topic">anthropic</span><span class="topic">claude</span><span class="topic">claude-code</span></div>
+            </a>
+
+            <a href="repos/xai-org-x-algorithm.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">xai-org/x-algorithm</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        14.2k
+                    </span>
+                </div>
+                <p class="repo-desc">Algorithm powering the For You feed on X</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #dea584;"></span>
+                        Rust
+                    </span>
+                    <span class="repo-forks">⑂ 2.5k</span>
+                    <span class="repo-issues">⊙ 0</span>
+                </div>
+                
+            </a>
+
+            <a href="repos/othmanadi-planning-with-files.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">OthmanAdi/planning-with-files</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        11.9k
+                    </span>
+                </div>
+                <p class="repo-desc">Claude Code skill implementing Manus-style persistent markdown planning — the workflow pattern behind the $2B acquisition.</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #3572A5;"></span>
+                        Python
+                    </span>
+                    <span class="repo-forks">⑂ 1.1k</span>
+                    <span class="repo-issues">⊙ 13</span>
+                </div>
+                <div class="topics"><span class="topic">adal</span><span class="topic">agent</span><span class="topic">agent-skills</span><span class="topic">agents</span></div>
+            </a>
+
+            <a href="repos/vercel-labs-agent-browser.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">vercel-labs/agent-browser</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        11.7k
+                    </span>
+                </div>
+                <p class="repo-desc">Browser automation CLI for AI agents</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #2b7489;"></span>
+                        TypeScript
+                    </span>
+                    <span class="repo-forks">⑂ 649</span>
+                    <span class="repo-issues">⊙ 141</span>
+                </div>
+                
+            </a>
+
+            <a href="repos/vercel-labs-json-render.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">vercel-labs/json-render</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        9.7k
+                    </span>
+                </div>
+                <p class="repo-desc">AI → JSON → UI</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #2b7489;"></span>
+                        TypeScript
+                    </span>
+                    <span class="repo-forks">⑂ 513</span>
+                    <span class="repo-issues">⊙ 37</span>
+                </div>
+                
+            </a>
+
+            <a href="repos/snarktank-ralph.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">snarktank/ralph</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        8.8k
+                    </span>
+                </div>
+                <p class="repo-desc">Ralph is an autonomous AI agent loop that runs repeatedly until all PRD items are complete. </p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #2b7489;"></span>
+                        TypeScript
+                    </span>
+                    <span class="repo-forks">⑂ 1.0k</span>
+                    <span class="repo-issues">⊙ 36</span>
+                </div>
+                
+            </a>
+
+            <a href="repos/kepano-obsidian-skills.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">kepano/obsidian-skills</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        8.7k
+                    </span>
+                </div>
+                <p class="repo-desc">Agent skills for Obsidian</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #8b949e;"></span>
+                        Unknown
+                    </span>
+                    <span class="repo-forks">⑂ 459</span>
+                    <span class="repo-issues">⊙ 7</span>
+                </div>
+                <div class="topics"><span class="topic">claude</span><span class="topic">clawdbot</span><span class="topic">codex</span><span class="topic">molty</span></div>
+            </a>
+
+            <a href="repos/originalankur-maptoposter.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">originalankur/maptoposter</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        8.6k
+                    </span>
+                </div>
+                <p class="repo-desc">Transform your favorite cities into beautiful, minimalist designs. MapToPoster lets you create and export visually striking map posters with code.</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #3572A5;"></span>
+                        Python
+                    </span>
+                    <span class="repo-forks">⑂ 772</span>
+                    <span class="repo-issues">⊙ 10</span>
+                </div>
+                <div class="topics"><span class="topic">design</span><span class="topic">maps</span><span class="topic">matplotlib-pyplot</span><span class="topic">openstreetmap</span></div>
+            </a>
+
+            <a href="repos/different-ai-openwork.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">different-ai/openwork</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        8.0k
+                    </span>
+                </div>
+                <p class="repo-desc">An open-source alternative to Claude Cowork, powered by opencode</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #2b7489;"></span>
+                        TypeScript
+                    </span>
+                    <span class="repo-forks">⑂ 621</span>
+                    <span class="repo-issues">⊙ 68</span>
+                </div>
+                
+            </a>
+
+            <a href="repos/zhulinsen-daily-stock-analysis.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">ZhuLinsen/daily_stock_analysis</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        7.7k
+                    </span>
+                </div>
+                <p class="repo-desc">LLM驱动的 A/H/美股智能分析器，多数据源行情 + 实时新闻 + Gemini 决策仪表盘 + 多渠道推送，零成本，纯白嫖，定时运行</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #3572A5;"></span>
+                        Python
+                    </span>
+                    <span class="repo-forks">⑂ 8.2k</span>
+                    <span class="repo-issues">⊙ 19</span>
+                </div>
+                <div class="topics"><span class="topic">agent</span><span class="topic">ai</span><span class="topic">aigc</span><span class="topic">gemini</span></div>
+            </a>
+
+            <a href="repos/chatfire-ai-huobao-drama.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">chatfire-AI/huobao-drama</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        6.7k
+                    </span>
+                </div>
+                <p class="repo-desc">🎬 火宝短剧 - 基于AI的一站式短剧生成平台 《一句话生成完整短剧，从剧本到成片全自动化》  Huobao Drama - An AI-Powered End-to-End Short Drama Generator "One Sentence to Complete Drama: Fully Automated from Script to Final Video"</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #41b883;"></span>
+                        Vue
+                    </span>
+                    <span class="repo-forks">⑂ 1.2k</span>
+                    <span class="repo-issues">⊙ 14</span>
+                </div>
+                
+            </a>
+
+            <a href="repos/github-copilot-sdk.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">github/copilot-sdk</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        6.4k
+                    </span>
+                </div>
+                <p class="repo-desc">Multi-platform SDK for integrating GitHub Copilot Agent into apps and services</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #2b7489;"></span>
+                        TypeScript
+                    </span>
+                    <span class="repo-forks">⑂ 696</span>
+                    <span class="repo-issues">⊙ 83</span>
+                </div>
+                
+            </a>
+
+            <a href="repos/qwenlm-qwen3-tts.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">QwenLM/Qwen3-TTS</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        6.2k
+                    </span>
+                </div>
+                <p class="repo-desc">Qwen3-TTS is an open-source series of TTS models developed by the Qwen team at Alibaba Cloud, supporting stable, expressive, and streaming speech generation, free-form voice design, and vivid voice cloning.</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #3572A5;"></span>
+                        Python
+                    </span>
+                    <span class="repo-forks">⑂ 712</span>
+                    <span class="repo-issues">⊙ 36</span>
+                </div>
+                
+            </a>
+
+            <a href="repos/sickn33-antigravity-awesome-skills.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">sickn33/antigravity-awesome-skills</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        5.6k
+                    </span>
+                </div>
+                <p class="repo-desc">The Ultimate Collection of 500+ Agentic Skills for Claude Code/Antigravity/Cursor. Battle-tested, high-performance skills for AI agents including official skills from Anthropic and Vercel.</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #3572A5;"></span>
+                        Python
+                    </span>
+                    <span class="repo-forks">⑂ 1.2k</span>
+                    <span class="repo-issues">⊙ 0</span>
+                </div>
+                <div class="topics"><span class="topic">agentic-skills</span><span class="topic">ai-agents</span><span class="topic">antigravity</span><span class="topic">autonomous-coding</span></div>
+            </a>
+
+            <a href="repos/coreyhaines31-marketingskills.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">coreyhaines31/marketingskills</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        5.4k
+                    </span>
+                </div>
+                <p class="repo-desc">Marketing skills for Claude Code and AI agents. CRO, copywriting, SEO, analytics, and growth engineering.</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #8b949e;"></span>
+                        Unknown
+                    </span>
+                    <span class="repo-forks">⑂ 585</span>
+                    <span class="repo-issues">⊙ 2</span>
+                </div>
+                <div class="topics"><span class="topic">claude</span><span class="topic">codex</span><span class="topic">marketing</span></div>
+            </a>
+
+            <a href="repos/chriswiles-claude-code-showcase.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">ChrisWiles/claude-code-showcase</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        5.2k
+                    </span>
+                </div>
+                <p class="repo-desc">Comprehensive Claude Code project configuration example with hooks, skills, agents, commands, and GitHub Actions workflows</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #f1e05a;"></span>
+                        JavaScript
+                    </span>
+                    <span class="repo-forks">⑂ 440</span>
+                    <span class="repo-issues">⊙ 6</span>
+                </div>
+                
+            </a>
+
+            <a href="repos/21st-dev-1code.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">21st-dev/1code</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        4.6k
+                    </span>
+                </div>
+                <p class="repo-desc">Best UI for Claude Code</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #2b7489;"></span>
+                        TypeScript
+                    </span>
+                    <span class="repo-forks">⑂ 446</span>
+                    <span class="repo-issues">⊙ 54</span>
+                </div>
+                
+            </a>
+
+            <a href="repos/lucasgelfond-zerobrew.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">lucasgelfond/zerobrew</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        4.5k
+                    </span>
+                </div>
+                <p class="repo-desc">A drop-in, 5-20x faster, experimental Homebrew alternative</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #dea584;"></span>
+                        Rust
+                    </span>
+                    <span class="repo-forks">⑂ 104</span>
+                    <span class="repo-issues">⊙ 32</span>
+                </div>
+                
+            </a>
+
+            <a href="repos/nvidia-personaplex.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">NVIDIA/personaplex</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        4.3k
+                    </span>
+                </div>
+                <p class="repo-desc">PersonaPlex code.</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #3572A5;"></span>
+                        Python
+                    </span>
+                    <span class="repo-forks">⑂ 607</span>
+                    <span class="repo-issues">⊙ 27</span>
+                </div>
+                
+            </a>
+
+            <a href="repos/torvalds-audionoise.html" class="repo-card">
+                <div class="repo-header">
+                    <span class="repo-name">torvalds/AudioNoise</span>
+                    <span class="repo-stars">
+                        <svg viewBox="0 0 16 16"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+                        4.2k
+                    </span>
+                </div>
+                <p class="repo-desc">Random digital audio effects</p>
+                <div class="repo-footer">
+                    <span class="repo-lang">
+                        <span class="lang-color" style="background: #555555;"></span>
+                        C
+                    </span>
+                    <span class="repo-forks">⑂ 195</span>
+                    <span class="repo-issues">⊙ 30</span>
+                </div>
+                
+            </a>
+
+        </div>
+    </section>
+    
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <p>Generated by GitHub Trends Analyzer • Data updated daily • Not affiliated with GitHub</p>
+        </div>
+    </footer>
+</body>
+</html>
