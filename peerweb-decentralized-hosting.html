@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover Peerweb and decentralized web hosting with WebTorrent. Learn about P2P website hosting, how it works, and related projects like IPFS and Beaker Browser.">
+    <title>Decentralized Web Hosting with WebTorrent | GitHub Trends</title>
+    <script defer data-domain="icrack3x.github.io" src="https://plausible.io/js/script.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --success: #3fb950;
+            --warning: #d29922;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent), #a371f7);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .logo-text span {
+            color: var(--accent);
+        }
+        
+        nav {
+            display: flex;
+            gap: 24px;
+        }
+        
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        nav a:hover {
+            color: var(--text-primary);
+        }
+        
+        main {
+            padding: 40px 0;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+            background: linear-gradient(180deg, rgba(88, 166, 255, 0.1) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .breadcrumb-sep {
+            color: var(--text-secondary);
+        }
+        
+        .breadcrumb-current {
+            color: var(--text-secondary);
+        }
+        
+        .content-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        
+        .content-section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .content-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 24px 0 12px;
+            color: var(--accent);
+        }
+        
+        .content-section p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+        
+        .content-section ul {
+            color: var(--text-secondary);
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+        
+        .content-section li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        .highlight-box {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+        
+        .highlight-box p {
+            margin: 0;
+        }
+        
+        .repo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+        
+        .repo-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s, border-color 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .repo-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+        }
+        
+        .repo-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .repo-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .repo-stars {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: var(--warning);
+        }
+        
+        .repo-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        
+        .repo-footer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .repo-lang {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .lang-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .comparison-table th {
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+        
+        .comparison-table td {
+            color: var(--text-secondary);
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: var(--bg-tertiary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--accent);
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--success);
+            color: var(--bg-primary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: opacity 0.2s;
+            margin-top: 8px;
+        }
+        
+        .cta-button:hover {
+            opacity: 0.9;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .feature-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .feature-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .feature-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+            margin-top: 60px;
+            text-align: center;
+        }
+        
+        footer p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .repo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 13px;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px;
+            }
+            
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">GT</div>
+                    <div class="logo-text">GitHub<span>Trends</span></div>
+                </a>
+                <nav>
+                    <a href="index.html">Trending</a>
+                    <a href="categories/index.html">Languages</a>
+                    <a href="#categories">Categories</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a>
+                <span class="breadcrumb-sep">›</span>
+                <span class="breadcrumb-current">Decentralized Web Hosting</span>
+            </nav>
+            
+            <section class="hero">
+                <h1>🌐 Decentralized Web Hosting</h1>
+                <p>Exploring Peerweb, WebTorrent, and the future of peer-to-peer website hosting without centralized servers</p>
+            </section>
+            
+            <article class="content-section">
+                <h2><span>🚀</span> What is Peerweb?</h2>
+                <p>
+                    <strong>Peerweb</strong> is a revolutionary approach to hosting and sharing websites using WebTorrent technology. 
+                    Instead of relying on centralized servers that can be shut down or censored, websites are distributed across 
+                    a peer-to-peer network, making them censorship-resistant and always available as long as peers remain online.
+                </p>
+                
+                <div class="highlight-box">
+                    <p>
+                        <strong>Key Innovation:</strong> Peerweb leverages the BitTorrent protocol (via WebTorrent) to distribute 
+                        website files across a decentralized network. When someone visits a Peerweb site, they're not connecting 
+                        to a central server—they're downloading pieces of the site from multiple peers simultaneously.
+                    </p>
+                </div>
+                
+                <p>
+                    The platform enables users to upload static websites via simple drag-and-drop. Each site receives a unique 
+                    torrent hash that can be shared as a Peerweb link. As long as at least one peer (including the original uploader) 
+                    keeps the tab open or runs the desktop client, the site remains accessible to anyone with the link.
+                </p>
+                
+                <a href="https://peerweb.lol/" class="cta-button" target="_blank" rel="noopener">
+                    Visit Peerweb.lol →
+                </a>
+            </article>
+            
+            <article class="content-section">
+                <h2><span>⚙️</span> How WebTorrent-Based Hosting Works</h2>
+                
+                <h3>The Technology Stack</h3>
+                <p>
+                    WebTorrent is the first BitTorrent client that works directly in the browser using open web standards—no plugins, 
+                    extensions, or installations required. It uses WebRTC data channels for peer-to-peer communication, enabling 
+                    browsers to connect directly to each other.
+                </p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>📤 Upload</h4>
+                        <p>Users drag and drop their static website folder. Peerweb creates a torrent from the files.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🔗 Distribution</h4>
+                        <p>The torrent is shared across the WebRTC peer network. Each visitor becomes a seeder.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>⚡ Caching</h4>
+                        <p>Sites are cached locally using IndexedDB for instant loading on repeat visits.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🛡️ Security</h4>
+                        <p>All content is sanitized with DOMPurify and runs in sandboxed iframes.</p>
+                    </div>
+                </div>
+                
+                <h3>Key Requirements</h3>
+                <ul>
+                    <li>Website must contain an <code>index.html</code> file (in root or subfolder)</li>
+                    <li>All resources should use relative paths</li>
+                    <li>Only static content supported (HTML, CSS, JS, images, fonts, etc.)</li>
+                    <li>Sites run in a sandboxed environment for security</li>
+                </ul>
+                
+                <h3>The Process Flow</h3>
+                <ol style="color: var(--text-secondary); margin: 16px 0; padding-left: 24px;">
+                    <li style="margin-bottom: 8px;"><strong>Create:</strong> Build a static website with HTML, CSS, and JavaScript</li>
+                    <li style="margin-bottom: 8px;"><strong>Upload:</strong> Drag and drop your website folder to Peerweb</li>
+                    <li style="margin-bottom: 8px;"><strong>Share:</strong> Receive a unique PeerWeb link with a torrent hash</li>
+                    <li style="margin-bottom: 8px;"><strong>Host:</strong> Keep the tab open or use the desktop client for permanent hosting</li>
+                </ol>
+            </article>
+            
+            <article class="content-section">
+                <h2><span>⚖️</span> Comparison: Decentralized vs Traditional Hosting</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Traditional Hosting</th>
+                            <th>WebTorrent Hosting (Peerweb)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Infrastructure</strong></td>
+                            <td>Centralized servers (AWS, Vercel, Netlify)</td>
+                            <td>Peer-to-peer network of browsers</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cost</strong></td>
+                            <td>Free tiers available, paid plans for scale</td>
+                            <td>Completely free—no hosting fees ever</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Censorship Resistance</strong></td>
+                            <td>Vulnerable to takedowns, DNS blocking</td>
+                            <td>Highly resistant—no single point of failure</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Availability</strong></td>
+                            <td>Depends on server uptime (99.9% typical)</td>
+                            <td>Depends on peer availability</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Performance</strong></td>
+                            <td>Fast CDNs, optimized for speed</td>
+                            <td>Improves with more peers; caching helps</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Content Type</strong></td>
+                            <td>Static and dynamic content supported</td>
+                            <td>Static content only</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Setup Complexity</strong></td>
+                            <td>Domain registration, DNS configuration</td>
+                            <td>Drag and drop—no configuration needed</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Global Distribution</strong></td>
+                            <td>CDN-dependent</td>
+                            <td>Automatic worldwide distribution</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="highlight-box">
+                    <p>
+                        <strong>When to use Peerweb:</strong> Ideal for personal projects, static documentation, 
+                        censorship-resistant content, temporary file sharing, and experiments where traditional 
+                        hosting overhead isn't justified.
+                    </p>
+                </div>
+            </article>
+            
+            <article class="content-section">
+                <h2><span>🔧</span> Related Projects & Technologies</h2>
+                
+                <h3>IPFS (InterPlanetary File System)</h3>
+                <p>
+                    IPFS is a peer-to-peer hypermedia protocol designed to make the web faster, safer, and more open. 
+                    Unlike WebTorrent, which focuses on file sharing, IPFS aims to replace HTTP entirely with a 
+                    content-addressed distributed file system. Files are identified by their hash, not their location.
+                </p>
+                
+                <h3>Beaker Browser</h3>
+                <p>
+                    Beaker was an experimental peer-to-peer web browser that added new APIs for building hostless 
+                    applications. While now archived, it pioneered concepts like user-owned data and peer-to-peer 
+                    websites using the Dat protocol. It demonstrated that browsers could be more than just content 
+                    consumers—they could be active participants in the network.
+                </p>
+                
+                <h3>Other Notable Projects</h3>
+                <ul>
+                    <li><strong>ZeroNet:</strong> Decentralized websites using Bitcoin cryptography and BitTorrent network</li>
+                    <li><strong>Freenet:</strong> One of the original peer-to-peer platforms for censorship-resistant communication</li>
+                    <li><strong>Skynet:</strong> Decentralized storage and application hosting platform</li>
+                    <li><strong>Arweave:</strong> Permanent, decentralized web storage with a one-time payment model</li>
+                </ul>
+            </article>
+            
+            <article class="content-section">
+                <h2><span>⭐</span> GitHub Repositories to Watch</h2>
+                <p>
+                    These open-source projects are driving innovation in decentralized web hosting and 
+                    peer-to-peer technologies:
+                </p>
+                
+                <div class="repo-grid">
+                    <a href="https://github.com/webtorrent/webtorrent" class="repo-card" target="_blank" rel="noopener">
+                        <div class="repo-header">
+                            <span class="repo-name">webtorrent/webtorrent</span>
+                            <span class="repo-stars">⭐ 30k+</span>
+                        </div>
+                        <p class="repo-desc">⚡️ Streaming torrent client for the web. The core technology powering browser-based P2P file sharing.</p>
+                        <div class="repo-footer">
+                            <span class="repo-lang">
+                                <span class="lang-color" style="background: #f1e05a;"></span>
+                                JavaScript
+                            </span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://github.com/webtorrent/webtorrent-cli" class="repo-card" target="_blank" rel="noopener">
+                        <div class="repo-header">
+                            <span class="repo-name">webtorrent/webtorrent-cli</span>
+                            <span class="repo-stars">⭐ 4k+</span>
+                        </div>
+                        <p class="repo-desc">WebTorrent command line interface. Stream torrents to AirPlay, Chromecast, VLC, and more.</p>
+                        <div class="repo-footer">
+                            <span class="repo-lang">
+                                <span class="lang-color" style="background: #f1e05a;"></span>
+                                JavaScript
+                            </span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://github.com/ipfs/ipfs" class="repo-card" target="_blank" rel="noopener">
+                        <div class="repo-header">
+                            <span class="repo-name">ipfs/ipfs</span>
+                            <span class="repo-stars">⭐ 25k+</span>
+                        </div>
+                        <p class="repo-desc">Peer-to-peer hypermedia protocol. A content-addressed, versioned, P2P file system.</p>
+                        <div class="repo-footer">
+                            <span class="repo-lang">
+                                <span class="lang-color" style="background: #3572A5;"></span>
+                                Go
+                            </span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://github.com/ipfs/js-ipfs" class="repo-card" target="_blank" rel="noopener">
+                        <div class="repo-header">
+                            <span class="repo-name">ipfs/js-ipfs</span>
+                            <span class="repo-stars">⭐ 7k+</span>
+                        </div>
+                        <p class="repo-desc">IPFS implementation in JavaScript for browser and Node.js environments.</p>
+                        <div class="repo-footer">
+                            <span class="repo-lang">
+                                <span class="lang-color" style="background: #f1e05a;"></span>
+                                JavaScript
+                            </span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://github.com/beakerbrowser/beaker" class="repo-card" target="_blank" rel="noopener">
+                        <div class="repo-header">
+                            <span class="repo-name">beakerbrowser/beaker</span>
+                            <span class="repo-stars">⭐ 7k+</span>
+                        </div>
+                        <p class="repo-desc">🌐 An experimental peer-to-peer Web browser (archived). Pioneered P2P web concepts.</p>
+                        <div class="repo-footer">
+                            <span class="repo-lang">
+                                <span class="lang-color" style="background: #f1e05a;"></span>
+                                JavaScript
+                            </span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://github.com/HelloZeroNet/ZeroNet" class="repo-card" target="_blank" rel="noopener">
+                        <div class="repo-header">
+                            <span class="repo-name">HelloZeroNet/ZeroNet</span>
+                            <span class="repo-stars">⭐ 18k+</span>
+                        </div>
+                        <p class="repo-desc">ZeroNet - Decentralized websites using Bitcoin crypto and BitTorrent network.</p>
+                        <div class="repo-footer">
+                            <span class="repo-lang">
+                                <span class="lang-color" style="background: #3572A5;"></span>
+                                Python
+                            </span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://github.com/freenet/fred" class="repo-card" target="_blank" rel="noopener">
+                        <div class="repo-header">
+                            <span class="repo-name">freenet/fred</span>
+                            <span class="repo-stars">⭐ 4k+</span>
+                        </div>
+                        <p class="repo-desc">Freenet REference Daemon - a censorship-resistant, peer-to-peer publishing platform.</p>
+                        <div class="repo-footer">
+                            <span class="repo-lang">
+                                <span class="lang-color" style="background: #b07219;"></span>
+                                Java
+                            </span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://github.com/feross/simple-peer" class="repo-card" target="_blank" rel="noopener">
+                        <div class="repo-header">
+                            <span class="repo-name">feross/simple-peer</span>
+                            <span class="repo-stars">⭐ 7k+</span>
+                        </div>
+                        <p class="repo-desc">📡 Simple WebRTC video/voice and data channels. Used by WebTorrent for P2P connections.</p>
+                        <div class="repo-footer">
+                            <span class="repo-lang">
+                                <span class="lang-color" style="background: #f1e05a;"></span>
+                                JavaScript
+                            </span>
+                        </div>
+                    </a>
+                </div>
+            </article>
+            
+            <article class="content-section">
+                <h2><span>🎯</span> Conclusion</h2>
+                <p>
+                    Decentralized web hosting represents a paradigm shift in how we think about web infrastructure. 
+                    Projects like Peerweb demonstrate that it's possible to host websites without relying on centralized 
+                    servers, creating a more resilient and censorship-resistant internet.
+                </p>
+                <p>
+                    While still in its early stages with limitations (static content only, peer dependency), the technology 
+                    is rapidly evolving. As WebRTC becomes more robust and peer-to-peer networks grow, we may see 
+                    decentralized hosting become a viable alternative for a wide range of use cases—from personal blogs 
+                    to mission-critical applications that require maximum availability and resistance to censorship.
+                </p>
+                <p>
+                    The future of the web may not be fully centralized or fully decentralized, but rather a hybrid 
+                    ecosystem where users can choose the right tool for their specific needs—whether that's the 
+                    convenience of traditional hosting or the resilience of peer-to-peer networks.
+                </p>
+                
+                <div style="margin-top: 20px;">
+                    <span class="tag">#webtorrent</span>
+                    <span class="tag">#p2p</span>
+                    <span class="tag">#decentralized</span>
+                    <span class="tag">#peerweb</span>
+                    <span class="tag">#ipfs</span>
+                    <span class="tag">#censorship-resistant</span>
+                </div>
+            </article>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Generated by GitHub Trends Analyzer • Data updated regularly • Not affiliated with GitHub</p>
+        </div>
+    </footer>
+</body>
+</html>
